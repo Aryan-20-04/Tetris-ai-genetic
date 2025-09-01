@@ -382,6 +382,14 @@ class GeneticAlgorithm:
             with open(f"{RESULTS_DIR}/top5_gen_{generation}.json", "w") as f:
                 json.dump(top_individuals, f, indent=2)
                 
+            if self.best_fitness is not None:
+                with open(f"{RESULTS_DIR}/best_overall.json","w") as f:
+                    json.dump({
+                        "generation": generation,
+                        "fitness": self.best_fitness,
+                        "weights": self.best_individual
+                    },f,indent=2)
+                
         except Exception as e:
             print(f"[Warning] Could not save progress: {e}")
 
@@ -502,15 +510,15 @@ def main():
     print("Starting Tetris AI Evolution...")
     
     ga = GeneticAlgorithm(
-        population_size=30,  # Reduced for faster iteration
+        population_size=35,  # Reduced for faster iteration
         mutation_rate=0.15,
         crossover_rate=0.8,
         elite_size=2,
-        max_pieces=100  # Reduced for faster games
+        max_pieces=70  # Reduced for faster games
     )
     
     best_weights, best_fitness = ga.run_evolution(
-        generations=250, 
+        generations=150, 
         parallel_processes=6
     )
     

@@ -12,45 +12,18 @@ from ai_agent import AIAgent
 def load_best_weights(generation: Optional[int] = None) -> Optional[Dict[str, float]]:
     """Load the best weights from a specific generation or the latest"""
     results_dir = "ga_results"
+    filepath = os.path.join(results_dir,"best_overall.json")
     
-    if not os.path.exists(results_dir):
+    if not os.path.exists(filepath):
         print("No GA results found. Run the genetic algorithm first.")
         return None
     
-    if generation is not None:
-        filename = f"best_gen_{generation}.json"
-    else:
-        # Find the latest generation
-        files = [f for f in os.listdir(results_dir) if f.startswith("best_gen_")]
-        if not files:
-            print("No best weights found.")
-            return None
-        
-        # Get the highest generation number
-        generations = []
-        for f in files:
-            try:
-                gen_num = int(f.split("_")[2].split(".")[0])
-                generations.append(gen_num)
-            except:
-                continue
-        
-        if not generations:
-            print("No valid generation files found.")
-            return None
-        
-        latest_gen = max(generations)
-        filename = f"best_gen_{latest_gen}.json"
-        print(f"Loading weights from generation {latest_gen}")
-    
-    filepath = os.path.join(results_dir, filename)
-    
     try:
-        with open(filepath, 'r') as f:
-            data = json.load(f)
-        
-        print(f"Loaded weights with fitness: {data['fitness']:.1f}")
-        return data['weights']
+        with open(filepath, "r") as f:
+            data= json.load(f)
+        print(f"Loaded BEST-EVER weights from generation {data['generation']} "
+              f"(fitness: {data['fitness']:.1f})")
+        return data["weights"]
     
     except Exception as e:
         print(f"Error loading weights: {e}")
